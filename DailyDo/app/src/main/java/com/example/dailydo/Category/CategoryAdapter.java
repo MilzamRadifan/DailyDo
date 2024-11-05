@@ -1,6 +1,7 @@
 package com.example.dailydo.Category;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,19 +11,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.dailydo.Category.ListCategory;
+import com.example.dailydo.Category.Category;
 
 import com.example.dailydo.R;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
   private final Context context;
-  private final List<ListCategory> categoryList;
+  private final List<Category> categoryList;
 
-  public CategoryAdapter(Context context, List<ListCategory> categoryList) {
+  public CategoryAdapter(Context context, List<Category> categoryList) {
     this.context = context;
     this.categoryList = categoryList;
   }
@@ -48,13 +50,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
   @Override
   public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
-    ListCategory category = categoryList.get(position);
+    Category category = categoryList.get(position);
     holder.tvCategoryName.setText(category.getCategoryName());
-    holder.cvCategory.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Toast.makeText(holder.itemView.getContext(), "anda mengeklik " + category.getCategoryName(), Toast.LENGTH_SHORT).show();
-      }
+    holder.cvCategory.setOnClickListener(v -> {
+      Intent intent = new Intent(context, DetailCategoryActivity.class);
+      intent.putStringArrayListExtra("tasks", new ArrayList<>(category.getTasks()));
+
+      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      holder.itemView.getContext().startActivity(intent);
     });
   }
 

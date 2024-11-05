@@ -2,6 +2,8 @@ package com.example.dailydo.Category;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,31 +20,40 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class CategoryActivity extends AppCompatActivity {
 
   BottomNavigationView botNavbar;
   RecyclerView recyclerView;
   RecyclerView.LayoutManager layoutManager;
-  List<ListCategory> categoryList = new ArrayList<>();
+  List<Category> categoryList = new ArrayList<>();
+  CategoryAdapter adapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     EdgeToEdge.enable(this);
     setContentView(R.layout.activity_category);
-
-    List<ListCategory> categoryList = new ArrayList<>();
-    categoryList.add(new ListCategory("Sekolah"));
-    categoryList.add(new ListCategory("Kantor"));
-    categoryList.add(new ListCategory("Rumah Sakit"));
-    categoryList.add(new ListCategory("Restoran"));
-    categoryList.add(new ListCategory("Toko"));
+//
+//    List<Category> categoryList = new ArrayList<>();
+//    categoryList.add(new ListCategory("Sekolah"));
+//    categoryList.add(new ListCategory("Kantor"));
+//    categoryList.add(new ListCategory("Rumah Sakit"));
+//    categoryList.add(new ListCategory("Restoran"));
+//    categoryList.add(new ListCategory("Toko"));
 
     recyclerView = findViewById(R.id.rvCategory);
-    CategoryAdapter adapter = new CategoryAdapter(getApplicationContext(),categoryList);
+    adapter = new CategoryAdapter(getApplicationContext(),categoryList);
     recyclerView.setAdapter(adapter);
     layoutManager = new GridLayoutManager(CategoryActivity.this, 2);
     recyclerView.setLayoutManager(layoutManager);
+
+    fetchCategories();
 
     botNavbar= findViewById(R.id.bottomNav);
     botNavbar.setSelectedItemId(R.id.category);
@@ -56,5 +67,37 @@ public class CategoryActivity extends AppCompatActivity {
       }
       return false;
     });
+  }
+
+
+  private void fetchCategories() {
+    new Thread(() -> {
+      Retrofit retrofit = new Retrofit.Builder()
+          .baseUrl("http://10.0.2.2/ApiDailyDo/")
+          .addConverterFactory(GsonConverterFactory.create())
+          .build();
+
+      ApiService apiService = retrofit.create(ApiService.class);
+      Call<List<Category>> call = apiService.getCategories();
+
+      call.enqueue(new Callback<List<Category>>() {
+        @Override
+        public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+          if (response.isSuccessful() && response.body() != null) {
+            categoryList.clear();
+            categoryList.addAll(response.body());
+            runOnUiThread(() -> adapter.notifyDataSetChanged());
+          } else {
+            Log.e("CategoryActivity", "Response failed: " + response.message());
+          }
+        }
+
+        @Override
+        public void onFailure(Call<List<Category>> call, Throwable t) {
+          Log.e("CategoryActivity", "Error: " + t.getMessage());
+          runOnUiThread(() -> Toast.makeText(CategoryActivity.this, "Gagal mengambil data", Toast.LENGTH_SHORT).show());
+        }
+      });
+    }).start();
   }
 }
