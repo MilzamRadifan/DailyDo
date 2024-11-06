@@ -2,19 +2,25 @@ package com.example.dailydo.Home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dailydo.Category.CategoryActivity;
 import com.example.dailydo.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +41,8 @@ public class HomeActivity extends AppCompatActivity {
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     taskList = new ArrayList<>();
-    taskList.add(new Task("Progress 2 mobile", "09 Oktober 2024", "Implementasi Recycler View", R.drawable.android));
-    taskList.add(new Task("Beli makan kucing", "10 Oktober 2024", "Whiskas 2, cat choice 2", R.drawable.whiskas));
-    taskList.add(new Task("Lomba mobile dev", "15 Oktober 2024", "Lomba di UGM mobile dev", R.drawable.medali));
-    taskList.add(new Task("UTS", "16 Oktober 2024", "belajar materi bab 1 sampe 3", R.drawable.buku));
-    taskList.add(new Task("Submit proposal", "20 Oktober 2024", "Proposal harus ngebenerin latar belakang", R.drawable.proposal));
-    taskList.add(new Task("Jemput di bandara", "39 Oktober 2024", "Jemput di bandara jam 2 siang, JGN LUPA", R.drawable.pesawat));
-    taskList.add(new Task("Latian MC", "22 Oktober", "Latian di gkm jam 7 malem", R.drawable.mc));
+    taskAdapter = new TaskAdapter(this, taskList);
+    recyclerView.setAdapter(taskAdapter);
 
     taskAdapter = new TaskAdapter(this, taskList);
     recyclerView.setAdapter(taskAdapter);
@@ -58,5 +59,37 @@ public class HomeActivity extends AppCompatActivity {
       }
       return false;
     });
+
+    Thread thread = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          URL url = new URL("http://10.0.2.2/ApiDailyDo/apiTask.php");
+          HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+          connection.setRequestMethod("GET");
+
+          BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+          StringBuilder response = new StringBuilder();
+          String line;
+          while ((line = reader.readLine()) != null) {
+            response.append(line);
+          }
+          reader.close();
+
+          Gson gson = new Gson();
+          List<Task> users = gson.fromJson(response.toString(), new TypeToken<List<Task>>(){}.getType());
+
+          new Handler(Looper.getMainLooper()).post(() -> {
+            taskList.clear();
+            taskList.addAll(users);
+            taskAdapter.notifyDataSetChanged();
+          });
+
+        } catch (Exception e) {
+          Log.e("HomeActivity", "Error fetching tasks", e);
+        }
+      }
+    });
+    thread.start();
   }
 }

@@ -1,45 +1,32 @@
 package com.example.dailydo.Home;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Task {
-  String judul, tanggal, keterangan;
-  int gambar;
+  @SerializedName("idTask")
+  private String idTask;
 
-  public Task(String judul, String tanggal, String keterangan, int gambar) {
-    this.judul = judul;
-    this.tanggal = tanggal;
-    this.keterangan = keterangan;
-    this.gambar = gambar;
+  @SerializedName("namaTask")
+  private String namaTask;
+
+  @SerializedName("deadline")
+  private String deadline;
+
+  public Task(String idTask, String namaTask, String deadline) {
+    this.idTask = idTask;
+    this.namaTask = namaTask;
+    this.deadline = deadline;
   }
 
-  public String getJudul() {
-    return judul;
+  public String getIdTask() {
+    return idTask;
   }
 
-  public void setJudul(String judul) {
-    this.judul = judul;
+  public String getNamaTask() {
+    return namaTask;
   }
 
-  public String getTanggal() {
-    return tanggal;
-  }
-
-  public void setTanggal(String tanggal) {
-    this.tanggal = tanggal;
-  }
-
-  public int getGambar() {
-    return gambar;
-  }
-
-  public void setGambar(int gambar) {
-    this.gambar = gambar;
-  }
-
-  public String getKeterangan() {
-    return keterangan;
-  }
-
-  public void setKeterangan(String keterangan) {
-    this.keterangan = keterangan;
+  public String getDeadline() {
+    return deadline;
   }
 }

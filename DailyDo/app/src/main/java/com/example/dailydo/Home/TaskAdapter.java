@@ -49,15 +49,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.CategoryViewHo
   @Override
   public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
     Task task = taskList.get(position);
-    holder.tvJudul.setText(task.getJudul());
-    holder.tvJumlah.setText(task.getTanggal());
-    holder.ivGambar.setImageResource(task.getGambar());
-    holder.ivGambar.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Toast.makeText(holder.itemView.getContext(), task.getKeterangan(), Toast.LENGTH_SHORT).show();
-      }
-    });
+    holder.tvJudul.setText(task.getNamaTask());
+    holder.tvJumlah.setText(task.getDeadline());
+    holder.ivGambar.setImageResource(R.drawable.home_icon);
+//    holder.ivGambar.setOnClickListener(new View.OnClickListener() {
+//      @Override
+//      public void onClick(View v) {
+//        Toast.makeText(holder.itemView.getContext(), user.getKeterangan(), Toast.LENGTH_SHORT).show();
+//      }
+//    });
   }
 
   @Override
