@@ -1,6 +1,7 @@
 package com.example.dailydo.Home;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,12 +53,21 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.CategoryViewHo
     holder.tvJudul.setText(task.getNamaTask());
     holder.tvJumlah.setText(task.getDeadline());
     holder.ivGambar.setImageResource(R.drawable.home_icon);
-//    holder.ivGambar.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View v) {
-//        Toast.makeText(holder.itemView.getContext(), user.getKeterangan(), Toast.LENGTH_SHORT).show();
-//      }
-//    });
+
+    holder.itemView.setOnClickListener(v -> {
+      Bundle bundle = new Bundle();
+      bundle.putString("namaTask", task.getNamaTask());
+      bundle.putString("deadline", task.getDeadline());
+
+      DetailTaskFragment fragment = new DetailTaskFragment();
+      fragment.setArguments(bundle);
+
+      ((HomeActivity) v.getContext()).getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.fragment_container, fragment)
+          .addToBackStack(null)
+          .commit();
+    });
   }
 
   @Override
