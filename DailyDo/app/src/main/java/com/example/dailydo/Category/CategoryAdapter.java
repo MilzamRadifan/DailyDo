@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.dailydo.Category.Category;
 
@@ -53,13 +54,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     Category category = categoryList.get(position);
     holder.tvCategoryName.setText(category.getCategoryName());
     holder.cvCategory.setOnClickListener(v -> {
-      Intent intent = new Intent(context, DetailCategoryActivity.class);
-      intent.putStringArrayListExtra("tasks", new ArrayList<>(category.getTasks()));
+      FragmentActivity activity = (FragmentActivity) context;
+      DetailCategoryFragment fragment = DetailCategoryFragment.newInstance(new ArrayList<>(category.getTasks()));
 
-      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      holder.itemView.getContext().startActivity(intent);
+      activity.getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.fragment_container, fragment)
+          .addToBackStack(null)
+          .commit();
     });
   }
+
 
   @Override
   public int getItemCount() {

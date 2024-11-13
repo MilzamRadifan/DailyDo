@@ -20,32 +20,32 @@ import com.example.dailydo.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailCategoryActivity extends AppCompatActivity {
-
-  private RecyclerView recyclerView;
-  private TaskAdapter taskAdapter;
-  private List<String> tasks;
-
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    EdgeToEdge.enable(this);
-    setContentView(R.layout.activity_detail_category);
-
-    // Ambil data dari Intent
-    tasks = getIntent().getStringArrayListExtra("tasks");
-
-    if (tasks == null) {
-      tasks = new ArrayList<>(); // Berikan default jika data null
-    }
-
-    recyclerView = findViewById(R.id.rvTasks);
-    taskAdapter = new TaskAdapter(tasks);
-    recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    recyclerView.setAdapter(taskAdapter);
-
-  }
-}
+//public class DetailCategoryActivity extends AppCompatActivity {
+//
+//  private RecyclerView recyclerView;
+//  private TaskAdapter taskAdapter;
+//  private List<String> tasks;
+//
+//  @Override
+//  protected void onCreate(Bundle savedInstanceState) {
+//    super.onCreate(savedInstanceState);
+//    EdgeToEdge.enable(this);
+//    setContentView(R.layout.activity_detail_category);
+//
+//    // Ambil data dari Intent
+//    tasks = getIntent().getStringArrayListExtra("tasks");
+//
+//    if (tasks == null) {
+//      tasks = new ArrayList<>(); // Berikan default jika data null
+//    }
+//
+//    recyclerView = findViewById(R.id.rvTasks);
+//    taskAdapter = new TaskAdapter(tasks);
+//    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//    recyclerView.setAdapter(taskAdapter);
+//
+//  }
+//}
 
 class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
   private final List<String> taskList;
