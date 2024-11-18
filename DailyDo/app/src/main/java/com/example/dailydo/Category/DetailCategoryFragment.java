@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,6 +22,7 @@ public class DetailCategoryFragment extends Fragment {
   private RecyclerView recyclerView;
   private TaskAdapter taskAdapter;
   private List<String> tasks;
+  TextView tvCategoryName;
 
   public static DetailCategoryFragment newInstance(ArrayList<String> tasks) {
     DetailCategoryFragment fragment = new DetailCategoryFragment();
@@ -33,6 +35,8 @@ public class DetailCategoryFragment extends Fragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_detail_category, container, false);
+
+    tvCategoryName = view.findViewById(R.id.tvCategoryName);
 
     if (getArguments() != null) {
       tasks = getArguments().getStringArrayList("tasks");

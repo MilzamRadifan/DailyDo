@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.dailydo.Category.Category;
 
 import com.example.dailydo.R;
@@ -32,12 +35,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
   public static class CategoryViewHolder extends RecyclerView.ViewHolder {
     TextView tvCategoryName;
+    ImageView ivIcon;
     CardView cvCategory;
 
     public CategoryViewHolder(@NonNull View itemView) {
       super(itemView);
       cvCategory = itemView.findViewById(R.id.cvCategory);
       tvCategoryName = itemView.findViewById(R.id.tvCategoryName);
+      ivIcon = itemView.findViewById(R.id.ivIcon);
     }
   }
 
@@ -53,6 +58,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
   public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
     Category category = categoryList.get(position);
     holder.tvCategoryName.setText(category.getCategoryName());
+    Glide.with(context).load(category.getIcon()).into(holder.ivIcon);
     holder.cvCategory.setOnClickListener(v -> {
       FragmentActivity activity = (FragmentActivity) context;
       DetailCategoryFragment fragment = DetailCategoryFragment.newInstance(new ArrayList<>(category.getTasks()));
