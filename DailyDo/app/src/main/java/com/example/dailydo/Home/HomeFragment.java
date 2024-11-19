@@ -32,6 +32,7 @@ public class HomeFragment extends Fragment {
   private RecyclerView recyclerView;
   private TaskAdapter taskAdapter;
   private List<Task> taskList;
+  AppDatabase appDatabase;
 
   @Nullable
   @Override
@@ -50,13 +51,21 @@ public class HomeFragment extends Fragment {
     taskAdapter = new TaskAdapter(requireContext(), taskList);
     recyclerView.setAdapter(taskAdapter);
 
-    fetchDataFromApi();
+    appDatabase = AppDatabase.getInstance(requireContext());
+
+    List<Task> dataTask = appDatabase.taskDao().getAllTask();
+    if (dataTask.isEmpty()){
+      fetchDataFromApi();
+    } else {
+      taskList.addAll(dataTask);
+      taskAdapter.notifyDataSetChanged();
+    }
   }
 
   private void fetchDataFromApi() {
     Thread thread = new Thread(() -> {
       try {
-        URL url = new URL("https://todozam.portoku.my.id/apiTask.php");
+        URL url = new URL("http://10.0.2.2/ApiDailyDo/apiTask.php");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
 
@@ -70,6 +79,8 @@ public class HomeFragment extends Fragment {
 
         Gson gson = new Gson();
         List<Task> tasks = gson.fromJson(response.toString(), new TypeToken<List<Task>>(){}.getType());
+
+        appDatabase.taskDao().insertTask(tasks);
 
         new Handler(Looper.getMainLooper()).post(() -> {
           taskList.clear();

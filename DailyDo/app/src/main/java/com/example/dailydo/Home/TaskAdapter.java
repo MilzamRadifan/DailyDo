@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.CategoryViewHo
   public static class CategoryViewHolder extends RecyclerView.ViewHolder {
     TextView tvJudul, tvJumlah;
     ImageView ivGambar;
+    Button btDel;
 
 
     public CategoryViewHolder(@NonNull View itemView) {
@@ -36,6 +38,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.CategoryViewHo
       tvJudul = itemView.findViewById(R.id.tvJudul);
       tvJumlah = itemView.findViewById(R.id.tvJumlah);
       ivGambar = itemView.findViewById(R.id.ivGambar);
+      btDel = itemView.findViewById(R.id.btDel);
     }
   }
 
@@ -56,6 +59,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.CategoryViewHo
 
     holder.itemView.setOnClickListener(v -> {
       Bundle bundle = new Bundle();
+      bundle.putString("idTask", task.getIdTask());
       bundle.putString("namaTask", task.getNamaTask());
       bundle.putString("deadline", task.getDeadline());
 
@@ -67,6 +71,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.CategoryViewHo
           .replace(R.id.fragment_container, fragment)
           .addToBackStack(null)
           .commit();
+    });
+
+    holder.btDel.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        AppDatabase db = AppDatabase.getInstance(context);
+        db.taskDao().deleteTask(task.getIdTask());
+        taskList.remove(holder.getAdapterPosition());
+        notifyItemRemoved(holder.getAdapterPosition());
+        Toast.makeText(context, "Task Berhasil dihapus", Toast.LENGTH_SHORT).show();
+      }
     });
   }
 

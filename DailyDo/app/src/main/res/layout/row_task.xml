@@ -35,4 +35,14 @@
     android:textColor="@color/black"
     app:layout_constraintStart_toStartOf="@+id/tvJudul"
     app:layout_constraintTop_toBottomOf="@+id/tvJudul" />
+
+  <Button
+    android:id="@+id/btDel"
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    android:layout_marginEnd="20dp"
+    android:background="@android:drawable/ic_delete"
+    android:backgroundTint="@color/purple"
+    app:layout_constraintBottom_toBottomOf="@+id/ivGambar"
+    app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

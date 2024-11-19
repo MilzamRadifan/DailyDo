@@ -20,4 +20,37 @@
     android:text="Deadline"
     android:layout_marginTop="8dp"
     android:textSize="16sp"/>
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Update Data"
+    android:textSize="24dp"
+    android:textStyle="bold"
+    android:layout_marginTop="30dp"/>
+
+  <EditText
+    android:id="@+id/etNamaTask"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ems="10"
+    android:inputType="text"
+    android:hint="Nama Task Baru" />
+
+  <EditText
+    android:id="@+id/etDeadline"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ems="10"
+    android:inputType="text"
+    android:hint="Deadline Baru"/>
+
+  <Button
+    android:id="@+id/btSave"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Save"
+    android:layout_marginTop="20dp"
+    android:textColor="@color/white"
+    android:background="@color/purple"/>
 </LinearLayout>
